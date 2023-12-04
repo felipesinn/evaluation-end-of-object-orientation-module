@@ -21,15 +21,23 @@ export class Tweet {
     return this.tweetId;
   }
   tweetAbstractMethod(): void {
-    console.log("Implemented abstract method for Tweet.");
+    return
   }
 
-  displayTweet(): string {
+  displayTweet(indentation = ""): string {
     const likesString =
       this.likes.length === 0 ? "" : `Likes: ${this.likes.length}`;
-    const repliesString =
-      this.replies.length === 0 ? "" : `Replies: ${this.replies.length}`;
-    return `@${this.user.username}: ${this.content}\n${likesString}\n${repliesString}`;
+
+    let tweetString = `${indentation}@${this.user.username}: ${this.content}\n${indentation}${likesString}`;
+
+    if (this.replies.length > 0) {
+      const repliesString = this.replies
+        .map((reply) => reply.displayTweet(`${indentation}> `))
+        .join("\n");
+      tweetString += `\n${repliesString}`;
+    }
+
+    return tweetString;
   }
 
   like(user: User): void {
